@@ -5,6 +5,7 @@
   "bind_addr": "{{ consul_bind_addr }}",
   "data_dir": "{{ consul_datadir }}",
   {% if consul_server %}
-  "server": true
+  "server": true,
+  "ui": true
   {% endif %}
 }
