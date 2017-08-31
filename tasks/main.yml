@@ -35,7 +35,7 @@
     - restart consul
 
 - name: ensure unit file is present
-  template: src=consul.j2.service dest=/usr/lib/systemd/system/consul.service
+  template: src=consul.j2.service dest=/etc/systemd/system/consul.service
   notify:
     - reload unit file
     - restart consul
