@@ -1,6 +1,6 @@
 ---
-- name: ensure dependencies are installed
-  yum: name=unzip state=present
+- include: ubuntu-deps.yml
+  when: ansible_distribution == "Ubuntu"
 
 - name: check for consul installation
   stat: path={{ consul_bin }}

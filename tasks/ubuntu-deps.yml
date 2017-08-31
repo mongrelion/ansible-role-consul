@@ -1,0 +1,5 @@
+---
+- name: ensure dependencies are installed
+  apt:
+    name: unzip
+    state: present
