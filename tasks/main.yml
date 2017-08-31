@@ -25,13 +25,9 @@
     - "{{ consul_configdir }}"
     - "{{ consul_datadir }}"
 
-- debug: var={{ consul_bind_interface }}{{ ['ipv4'] }}{{ ['address'] }}
-
 - name: figure interface to bind to
   set_fact:
     consul_bind_addr: "{{ hostvars[inventory_hostname][consul_bind_interface]['ipv4']['address'] }}"
-
-- debug: msg={{ consul_bind_addr }}
 
 - name: ensure config file is present
   template: src=config.j2.json dest=/etc/consul/config.json
