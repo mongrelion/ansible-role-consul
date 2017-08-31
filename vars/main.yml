@@ -1,0 +1,7 @@
+---
+consul_group: consul
+consul_user: consul
+consul_version: 0.9.2
+consul_bin: /usr/bin/consul
+consul_configdir: /etc/consul
+consul_datadir: /var/lib/consul

@@ -1,0 +1,5 @@
+---
+consul_devmode: no
+consul_start_on_boot: no
+consul_bind_interface: ansible_enp0s8
+consul_bootstrap: no

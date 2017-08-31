@@ -1,0 +1,49 @@
+---
+- name: ensure dependencies are installed
+  yum: name=unzip state=present
+
+- name: check for consul installation
+  stat: path={{ consul_bin }}
+  register: consulcheck
+
+- name: get consul
+  unarchive: src=https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip copy=no dest=/usr/bin
+  when: not consulcheck.stat.exists
+
+- name: ensure consul is executable
+  file: path={{ consul_bin }} mode="a+x"
+
+- name: ensure consul group is present
+  group: name={{ consul_group }}
+
+- name: ensure consul user is present
+  user: name={{ consul_user }} groups={{ consul_group }}
+
+- name: ensure config & data dir are present
+  file: path={{ item }} state=directory owner={{ consul_user }} group={{ consul_group }}
+  with_items:
+    - "{{ consul_configdir }}"
+    - "{{ consul_datadir }}"
+
+- debug: var={{ consul_bind_interface }}{{ ['ipv4'] }}{{ ['address'] }}
+
+- name: figure interface to bind to
+  set_fact:
+    consul_bind_addr: "{{ hostvars[inventory_hostname][consul_bind_interface]['ipv4']['address'] }}"
+
+- debug: msg={{ consul_bind_addr }}
+
+- name: ensure config file is present
+  template: src=config.j2.json dest=/etc/consul/config.json
+  notify:
+    - restart consul
+
+- name: ensure unit file is present
+  template: src=consul.j2.service dest=/usr/lib/systemd/system/consul.service
+  notify:
+    - reload unit file
+    - restart consul
+
+- name: ensure consul starts on boot
+  service: name=consul enabled=yes
+  when: consul_start_on_boot

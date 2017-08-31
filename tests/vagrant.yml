@@ -1,0 +1,9 @@
+---
+- hosts: server
+  become: yes
+  become_user: root
+  vars:
+    consul_bootstrap: yes
+    consul_server: yes
+  roles:
+    - ../consul
