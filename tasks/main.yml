@@ -6,8 +6,11 @@
   stat: path={{ consul_bin }}
   register: consulcheck
 
+- set_fact:
+    arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+
 - name: get consul
-  unarchive: src=https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip copy=no dest=/usr/bin
+  unarchive: src=https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_{{ arch }}.zip copy=no dest=/usr/bin
   when: not consulcheck.stat.exists
 
 - name: ensure consul is executable
